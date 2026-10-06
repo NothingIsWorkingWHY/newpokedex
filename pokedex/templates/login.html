@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Pokedex{% endblock %}
+
+{% block header %}POKEDEX{% endblock %}
+
+{% block content %}
+    <form action="{{ url_for('pokedex') }}" method="post">
+        <label for="username" class="block text-white mb-2">Username:</label>
+        <input type="text" id="username" name="username" required class="border border-black">
+        <label for="password" class="block text-white mb-2">Password:</label>
+        <input type="password" id="password" name="password" required class="border border-black">
+        <br>
+        <button type="submit" class="bg-[#DC143C] text-white px-4 py-2 mt-4 rounded hover:bg-[#900D09]">Login</button>
+    </form>
+{% endblock %}
