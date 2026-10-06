@@ -98,3 +98,40 @@
     </section>
 </body>
 </html>
+
+
+def get_data():
+    url = "https://pokeapi.co/api/v2/pokemon?limit=151"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data["results"]
+    else:
+        abort(500, description="Failed to fetch data from the API.")
+
+data = get_data()
+with open("pokedex.json", 'w') as file:
+    file_data = json.load(file)
+    file_data["animals"].append(data)
+    file.seek(0)
+    json.dump(file_data, file, indent=4)
+
+
+
+
+
+
+
+    <script>
+        async function fetchPokemon() {
+            const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=200');
+            const data = await response.json();
+            {% for pokemon in data.results %}
+                const pokemonName = '{{ pokemon.name }}';
+                const pokemonUrl = '{{ pokemon.url }}';
+                const pokemonID = pokemonUrl.split('/').filter(Boolean).pop();
+                console.log(`Name: ${pokemonName}, URL: ${pokemonUrl}, ID: ${pokemonID}`);
+            {% endfor %}
+
+        }
+    </script>
