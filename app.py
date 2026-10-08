@@ -38,10 +38,8 @@ def signup():
         confirm_password = request.form["confirm_password"]
  
         if not username or not email or not first_name or not last_name or len(password) < 8:
-            flash("Fill in every box. Passwords need at least 8 characters.", "error") 
             return render_template("signup.html") 
         if password != confirm_password:
-            flash("Passwords do not match.", "error")
             return render_template("signup.html")
  
         conn = get_db() 
@@ -54,12 +52,10 @@ def signup():
                 ) 
             conn.commit() 
         except pymysql.err.IntegrityError: 
-            flash("That username or email is already taken.", "error") 
             return render_template("signup.html") 
         finally: 
             conn.close() 
  
-        flash("Account created. You can log in now.", "success") 
         return redirect(url_for("login")) 
  
     return render_template("signup.html") 
@@ -84,10 +80,8 @@ def login():
             session.clear() 
             session["user_id"] = user["id"] 
             session["username"] = user["username"] 
-            flash(f"Welcome back, {user['username']}!", "success") 
             return redirect(url_for("index"))
  
-        flash("Incorrect username or password.", "error") 
  
     return render_template("login.html") 
  
