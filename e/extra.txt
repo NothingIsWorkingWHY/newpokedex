@@ -1,5 +1,7 @@
 docker compose -f pokedex/docker-compose.yml up -d
 docker compose -f pokedex/docker-compose.yml exec db mariadb -u flaskuser -p prototype
+172.19.0.1:3307
+
 
 <!DOCTYPE html>
 <html lang="en">

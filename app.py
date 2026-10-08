@@ -21,17 +21,22 @@ def get_db():
  
 @app.route("/") 
 def index(): 
-    return render_template("login.html") 
- 
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    return render_template("index.html")
+
+
  
 @app.route("/signup", methods=["GET", "POST"]) 
 def signup(): 
     if request.method == "POST": 
         username = request.form["username"].strip() 
         email = request.form["email"].strip().lower() 
+        first_name = request.form["first_name"].strip() 
+        last_name = request.form["last_name"].strip() 
         password = request.form["password"] 
  
-        if not username or not email or len(password) < 8: 
+        if not username or not email or not first_name or not last_name or len(password) < 8: 
             flash("Fill in every box. Passwords need at least 8 characters.", "error") 
             return render_template("signup.html") 
  
@@ -39,9 +44,9 @@ def signup():
         try: 
             with conn.cursor() as cur: 
                 cur.execute( 
-                    "INSERT INTO users (username, email, password_hash, display_name) " 
-                    "VALUES (%s, %s, %s, %s)", 
-                    (username, email, generate_password_hash(password), username), 
+                    "INSERT INTO users (username, first_name, last_name, email, password_hash, display_name) " 
+                    "VALUES (%s, %s, %s, %s, %s, %s)", 
+                    (username, first_name, last_name, email, generate_password_hash(password), username), 
                 ) 
             conn.commit() 
         except pymysql.err.IntegrityError: 
@@ -76,13 +81,13 @@ def login():
             session["user_id"] = user["id"] 
             session["username"] = user["username"] 
             flash(f"Welcome back, {user['username']}!", "success") 
-            return redirect(url_for("index")) 
+            return redirect(url_for("index"))
  
         flash("Incorrect username or password.", "error") 
  
     return render_template("login.html") 
  
- 
 
+ 
 if __name__ == "__main__":
     app.run(debug=True)
