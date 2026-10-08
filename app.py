@@ -35,18 +35,22 @@ def signup():
         first_name = request.form["first_name"].strip() 
         last_name = request.form["last_name"].strip() 
         password = request.form["password"] 
+        confirm_password = request.form["confirm_password"]
  
-        if not username or not email or not first_name or not last_name or len(password) < 8: 
+        if not username or not email or not first_name or not last_name or len(password) < 8:
             flash("Fill in every box. Passwords need at least 8 characters.", "error") 
             return render_template("signup.html") 
+        if password != confirm_password:
+            flash("Passwords do not match.", "error")
+            return render_template("signup.html")
  
         conn = get_db() 
         try: 
             with conn.cursor() as cur: 
                 cur.execute( 
-                    "INSERT INTO users (username, first_name, last_name, email, password_hash, display_name) " 
-                    "VALUES (%s, %s, %s, %s, %s, %s)", 
-                    (username, first_name, last_name, email, generate_password_hash(password), username), 
+                    "INSERT INTO users (username, first_name, last_name, email, password_hash) " 
+                    "VALUES (%s, %s, %s, %s, %s)", 
+                    (username, first_name, last_name, email, generate_password_hash(password)), 
                 ) 
             conn.commit() 
         except pymysql.err.IntegrityError: 
@@ -88,6 +92,7 @@ def login():
     return render_template("login.html") 
  
 
- 
+
 if __name__ == "__main__":
     app.run(debug=True)
+

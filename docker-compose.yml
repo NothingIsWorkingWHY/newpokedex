@@ -25,7 +25,7 @@ services:
     ports:
       - "8081:8080"
     depends_on:
-      - 172.19.0.1:3307
+      - db
 
 volumes:
   db_data:
