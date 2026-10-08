@@ -9,12 +9,12 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev-only-secret")
  
  
 def get_db(): 
-    """Open a new connection to the MariaDB container.""" 
     return pymysql.connect( 
-        host=os.environ.get("DB_HOST", "db"), 
-        user=os.environ.get("DB_USER"), 
-        password=os.environ.get("DB_PASSWORD"), 
-        database=os.environ.get("DB_NAME"), 
+        host=os.environ.get("DB_HOST", "127.0.0.1"), 
+        port=int(os.environ.get("DB_PORT", "3307")), 
+        user=os.environ.get("DB_USER", "flaskuser"), 
+        password=os.environ.get("DB_PASSWORD", "flaskpass"), 
+        database=os.environ.get("DB_NAME", "prototype"), 
         cursorclass=pymysql.cursors.DictCursor, 
     ) 
  
@@ -76,23 +76,13 @@ def login():
             session["user_id"] = user["id"] 
             session["username"] = user["username"] 
             flash(f"Welcome back, {user['username']}!", "success") 
-            return redirect(url_for("profile")) 
+            return redirect(url_for("index")) 
  
         flash("Incorrect username or password.", "error") 
  
     return render_template("login.html") 
  
  
-@app.route("/profile") 
-def profile(): 
-    return f"<h1>Logged in as {session.get('username')}</h1><a href='/logout'>Log out</a>" 
- 
- 
-@app.route("/logout") 
-def logout(): 
-    session.clear() 
-    flash("You have been logged out.", "success") 
-    return redirect(url_for("index")) 
 
 if __name__ == "__main__":
     app.run(debug=True)
