@@ -13,18 +13,14 @@
                 }
 
                 const data = await response.json();
-                data.results.forEach((pokemon) => {
-                    const pokemonId = pokemon.url.split('/').filter(Boolean).pop();
-                    const item = document.createElement('li');
-                    item.textContent = `${pokemonId}: ${pokemon.name}`;
-                    item.className = 'rounded border border-black p-2 capitalize';
-                    pokemonList.append(item);
-                });
+                const pokemon = data.results.find(p => p.url.split('/').filter(Boolean).pop() === '{{ pokemon_id }}');
+                if (!pokemon) {
+                    throw new Error('Pokemon not found.');
+                }
             } catch (error) {
                 status.textContent = error.message;
             }
         }
-
         fetchPokemon();
     </script>
 {% endblock %}

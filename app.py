@@ -85,6 +85,9 @@ def login():
  
     return render_template("login.html") 
  
+@app.route("/pokemon/<int:pokemon_id>")
+def pokemon(pokemon_id):
+    return render_template("pokemon.html", pokemon_id=pokemon_id)
 
 
 if __name__ == "__main__":
