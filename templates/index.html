@@ -15,7 +15,7 @@
             const pokemonList = document.getElementById('pokemon-list');
 
             try {
-                const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=200');
+                const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000');
                 if (!response.ok) {
                     throw new Error('Pokemon could not be loaded.');
                 }
@@ -25,6 +25,7 @@
                     const pokemonId = pokemon.url.split('/').filter(Boolean).pop();
                     const item = document.createElement('li');
                     item.textContent = `${pokemonId}: ${pokemon.name}`;
+                    item.innerHTML = `<a href="/pokemon/${pokemonId}" class="block w-full h-full">${item.textContent}</a>`;
                     item.className = 'rounded border border-black p-2 capitalize';
                     pokemonList.append(item);
                 });
