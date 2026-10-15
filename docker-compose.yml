@@ -21,11 +21,15 @@ services:
 
   adminer:
     image: adminer
-    container_name: flask-adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: host.docker.internal:3307
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8081:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:
