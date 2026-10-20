@@ -3,22 +3,25 @@ import os
 import pymysql
 from flask import Flask, flash, redirect, render_template, request, session, url_for, send_from_directory
 from werkzeug.security import check_password_hash, generate_password_hash 
- 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 app = Flask(__name__) 
-app.secret_key = os.environ.get("SECRET_KEY", "dev-only-secret") 
+app.secret_key = os.environ.get("SECRET_KEY", "") 
  
  
 def get_db(): 
     return pymysql.connect( 
-        host=os.environ.get("DB_HOST", "127.0.0.1"), 
-        port=int(os.environ.get("DB_PORT", "3307")), 
-        user=os.environ.get("DB_USER", "flaskuser"), 
-        password=os.environ.get("DB_PASSWORD", "flaskpass"), 
-        database=os.environ.get("DB_NAME", "prototype"), 
+        host=os.environ.get("DB_HOST", ""), 
+        port=int(os.environ.get("DB_PORT", "")), 
+        user=os.environ.get("DB_USER", ""), 
+        password=os.environ.get("DB_PASSWORD", ""), 
+        database=os.environ.get("DB_NAME", ""), 
         cursorclass=pymysql.cursors.DictCursor, 
     ) 
  
- 
+
 @app.route("/") 
 def index(): 
     if "user_id" not in session:
