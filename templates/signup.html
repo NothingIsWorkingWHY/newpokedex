@@ -6,19 +6,19 @@
 
 {% block content %}
     <form action="{{ url_for('signup') }}" method="post">
-        <label for="first_name" class="block text-white mb-2">First Name:</label>
+        <label for="first_name" class="block text-black mb-2">First Name:</label>
         <input type="text" id="first_name" name="first_name" required class="border border-black">
-        <label for="last_name" class="block text-white mb-2">Last Name:</label>
+        <label for="last_name" class="block text-black mb-2">Last Name:</label>
         <input type="text" id="last_name" name="last_name" required class="border border-black">
-        <label for="email" class="block text-white mb-2">Email:</label>
+        <label for="email" class="block text-black mb-2">Email:</label>
         <input type="email" id="email" name="email" required class="border border-black">
-        <label for="username" class="block text-white mb-2">Username:</label>
+        <label for="username" class="block text-black mb-2">Username:</label>
         <input type="text" id="username" name="username" required class="border border-black">
-        <label for="password" class="block text-white mb-2">Password:</label>
+        <label for="password" class="block text-black mb-2">Password:</label>
         <input type="password" id="password" name="password" required class="border border-black">
-        <label for="confirm_password" class="block text-white mb-2">Confirm Password:</label>
+        <label for="confirm_password" class="block text-black mb-2">Confirm Password:</label>
         <input type="password" id="confirm_password" name="confirm_password" required class="border border-black">
         <br>
-        <button type="submit" class="bg-[#DC143C] text-white px-4 py-2 mt-4 rounded hover:bg-[#900D09]">Sign Up</button>
+        <button type="submit" class="bg-[#DC143C] text-black px-4 py-2 mt-4 rounded hover:bg-[#900D09]">Sign Up</button>
     </form>
 {% endblock %}
