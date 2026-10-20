@@ -14,13 +14,6 @@
 
                 const data = await response.json();
                 const pokemon = data.results.find(p => p.url.split('/').filter(Boolean).pop() === '{{ pokemon_id }}');
-                if (!pokemon) {
-                    throw new Error('Pokemon not found.');
-                }
-            } catch (error) {
-                status.textContent = error.message;
-            }
-        }
-        fetchPokemon();
+                
     </script>
 {% endblock %}

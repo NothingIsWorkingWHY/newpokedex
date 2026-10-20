@@ -1,7 +1,7 @@
 import os 
  
 import pymysql
-from flask import Flask, flash, redirect, render_template, request, session, url_for 
+from flask import Flask, flash, redirect, render_template, request, session, url_for, send_from_directory
 from werkzeug.security import check_password_hash, generate_password_hash 
  
 app = Flask(__name__) 
@@ -89,6 +89,16 @@ def login():
 def pokemon(pokemon_id):
     return render_template("pokemon.html", pokemon_id=pokemon_id)
 
+@app.route('/pokeball.jpeg')
+def favicon():
+    try:
+        return send_from_directory(
+            directory=app.static_folder,  
+            filename='pokeball.jpeg',       
+            mimetype='image/vnd.microsoft.icon'
+        )
+    except FileNotFoundError:
+        return '', 404  
 
 if __name__ == "__main__":
     app.run(debug=True)
