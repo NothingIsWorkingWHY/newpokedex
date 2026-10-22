@@ -97,7 +97,7 @@ def login():
 def pokemon(pokemon_id):
     return render_template("pokemon.html", pokemon_id=pokemon_id)
 
-@app.route('/pokeball.jpeg')
+@app.route("/pokeball.jpeg")
 def favicon():
     try:
         return send_from_directory(
@@ -108,7 +108,11 @@ def favicon():
     except FileNotFoundError:
         return '', 404  
 
-@app.route('/logout', methods=["POST"])
+@app.route("/team")
+def team():
+    return render_template("team.html")
+
+@app.route("/logout", methods=["POST"])
 def logout():
     session.clear
     flash("You have been logged out")
