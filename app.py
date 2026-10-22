@@ -114,7 +114,7 @@ def team():
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    session.clear
+    session.clear()
     flash("You have been logged out")
     return redirect(url_for("login"))
 
