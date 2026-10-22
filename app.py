@@ -40,9 +40,14 @@ def signup():
         password = request.form["password"] 
         confirm_password = request.form["confirm_password"]
  
-        if not username or not email or not first_name or not last_name or len(password) < 8:
-            return render_template("signup.html") 
+        if not username or not email or not first_name or not last_name or not password or not confirm_password:
+            flash("Inputs cannot be empty")
+            return render_template("signup.html")
+        if len(password) < 8:
+            flash("Password must be atleast 8 characters")
+            return render_template("signup.html")
         if password != confirm_password:
+            flash("Passwords do not much")
             return render_template("signup.html")
  
         conn = get_db() 
@@ -102,6 +107,12 @@ def favicon():
         )
     except FileNotFoundError:
         return '', 404  
+
+@app.route('/logout', methods=["POST"])
+def logout():
+    session.clear
+    flash("You have been logged out")
+    return redirect(url_for("login"))
 
 if __name__ == "__main__":
     app.run(debug=True)
