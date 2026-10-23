@@ -49,7 +49,19 @@ def signup():
         if password != confirm_password:
             flash("Passwords do not much")
             return render_template("signup.html")
- 
+        if '@'  not in email or '.' not in email.split('@')[1]: 
+            flash("Invalid email format")
+            return render_template("signup.html")
+        if (
+            not any(c.islower() for c in password)
+            or not any(c.isupper() for c in password)
+            or not any(c.isdigit() for c in password)
+            or not any(not c.isalnum() for c in password)
+        ): 
+            flash("Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character")
+            return render_template("signup.html")
+
+   
         conn = get_db() 
         try: 
             with conn.cursor() as cur: 
@@ -60,6 +72,7 @@ def signup():
                 ) 
             conn.commit() 
         except pymysql.err.IntegrityError: 
+            flash("Username or email already exists")
             return render_template("signup.html") 
         finally: 
             conn.close() 
@@ -97,7 +110,7 @@ def login():
 def pokemon(pokemon_id):
     return render_template("pokemon.html", pokemon_id=pokemon_id)
 
-@app.route('/pokeball.jpeg')
+@app.route("/pokeball.jpeg")
 def favicon():
     try:
         return send_from_directory(
@@ -108,10 +121,27 @@ def favicon():
     except FileNotFoundError:
         return '', 404  
 
-@app.route('/logout', methods=["POST"])
+@app.route("/pokemonbackground.jpeg")
+def background():
+    try:
+        return send_from_directory(
+            directory=app.static_folder,  
+            filename='pokemonbackground.jpeg',       
+            mimetype='image/vnd.microsoft.icon'
+        )
+    except FileNotFoundError:
+        return '', 404  
+
+
+
+@app.route("/team")
+def team():
+    return render_template("team.html")
+
+@app.route("/logout", methods=["POST"])
 def logout():
-    session.clear
-    flash("You have been logged out")
+    session.clear()
+    flash("You have been logged out.")
     return redirect(url_for("login"))
 
 if __name__ == "__main__":
