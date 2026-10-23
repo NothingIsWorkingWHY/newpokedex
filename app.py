@@ -3,22 +3,25 @@ import os
 import pymysql
 from flask import Flask, flash, redirect, render_template, request, session, url_for, send_from_directory
 from werkzeug.security import check_password_hash, generate_password_hash 
- 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 app = Flask(__name__) 
-app.secret_key = os.environ.get("SECRET_KEY", "dev-only-secret") 
+app.secret_key = os.environ.get("SECRET_KEY", "") 
  
  
 def get_db(): 
     return pymysql.connect( 
-        host=os.environ.get("DB_HOST", "127.0.0.1"), 
-        port=int(os.environ.get("DB_PORT", "3307")), 
-        user=os.environ.get("DB_USER", "flaskuser"), 
-        password=os.environ.get("DB_PASSWORD", "flaskpass"), 
-        database=os.environ.get("DB_NAME", "prototype"), 
+        host=os.environ.get("DB_HOST", ""), 
+        port=int(os.environ.get("DB_PORT", "")), 
+        user=os.environ.get("DB_USER", ""), 
+        password=os.environ.get("DB_PASSWORD", ""), 
+        database=os.environ.get("DB_NAME", ""), 
         cursorclass=pymysql.cursors.DictCursor, 
     ) 
  
- 
+
 @app.route("/") 
 def index(): 
     if "user_id" not in session:
@@ -37,11 +40,28 @@ def signup():
         password = request.form["password"] 
         confirm_password = request.form["confirm_password"]
  
-        if not username or not email or not first_name or not last_name or len(password) < 8:
-            return render_template("signup.html") 
-        if password != confirm_password:
+        if not username or not email or not first_name or not last_name or not password or not confirm_password:
+            flash("Inputs cannot be empty")
             return render_template("signup.html")
- 
+        if len(password) < 8:
+            flash("Password must be atleast 8 characters")
+            return render_template("signup.html")
+        if password != confirm_password:
+            flash("Passwords do not much")
+            return render_template("signup.html")
+        if '@'  not in email or '.' not in email.split('@')[1]: 
+            flash("Invalid email format")
+            return render_template("signup.html")
+        if (
+            not any(c.islower() for c in password)
+            or not any(c.isupper() for c in password)
+            or not any(c.isdigit() for c in password)
+            or not any(not c.isalnum() for c in password)
+        ): 
+            flash("Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character")
+            return render_template("signup.html")
+
+   
         conn = get_db() 
         try: 
             with conn.cursor() as cur: 
@@ -52,6 +72,7 @@ def signup():
                 ) 
             conn.commit() 
         except pymysql.err.IntegrityError: 
+            flash("Username or email already exists")
             return render_template("signup.html") 
         finally: 
             conn.close() 
@@ -89,7 +110,7 @@ def login():
 def pokemon(pokemon_id):
     return render_template("pokemon.html", pokemon_id=pokemon_id)
 
-@app.route('/pokeball.jpeg')
+@app.route("/pokeball.jpeg")
 def favicon():
     try:
         return send_from_directory(
@@ -99,6 +120,29 @@ def favicon():
         )
     except FileNotFoundError:
         return '', 404  
+
+@app.route("/pokemonbackground.jpeg")
+def background():
+    try:
+        return send_from_directory(
+            directory=app.static_folder,  
+            filename='pokemonbackground.jpeg',       
+            mimetype='image/vnd.microsoft.icon'
+        )
+    except FileNotFoundError:
+        return '', 404  
+
+
+
+@app.route("/team")
+def team():
+    return render_template("team.html")
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    flash("You have been logged out.")
+    return redirect(url_for("login"))
 
 if __name__ == "__main__":
     app.run(debug=True)
