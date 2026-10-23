@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/jpeg" href="/static/images/pokeball.jpg">
 </head>
-<body class="bg-[#FFFDD0]">
+<body class="bg-[url('/static/images/pokemonbackground.jpg')] bg-cover bg-center">
     <header class="bg-[#DC143C] text-white p-4">
         <div class="container mx-auto flex justify-center items-center">
             <h1 class="text-2xl font-bold">{% block header %}{% endblock %}</h1>
@@ -20,6 +20,13 @@
             <a href="{{ url_for('signup') }}" class="hover:underline">Sign Up</a>
         </div>
     </nav>
+    {% with messages = get_flashed_messages() %}
+        <div class="container mx-auto p-4 flex justify-center items-center">
+            {% for message in messages %}
+                <p class="mb-3 text-red-700">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endwith %}
     <section class="container mx-auto p-4 flex justify-center items-center">
         {% block content %}{% endblock %}
     </section>
